@@ -1,11 +1,9 @@
-# app/extensions.py
 import pymongo
-from flask import current_app
+from pymongo import ASCENDING, DESCENDING, TEXT, GEOSPHERE
 
 client = None
 db = None
 
-# collections
 empreendimentosGD_collection = None
 
 
@@ -16,7 +14,29 @@ def init_mongo(app):
     try:
         client = pymongo.MongoClient(app.config['MONGO_URI'])
         db = client.bdaneel
+
+        empreendimentosGD_collection = db["empreendimentosGD_collection"]
+
         
+        existing = [idx["name"] for idx in empreendimentosGD_collection.list_indexes()]
+
+        def safe_create(spec, name):
+            if name not in existing:
+                empreendimentosGD_collection.create_index(spec, name=name)
+
+        safe_create([
+            ("SigUF", ASCENDING),
+            ("NomMunicipio", ASCENDING),
+            ("SigAgente", ASCENDING),
+            ("NomTitularEmpreendimento", ASCENDING),
+            ("MdaPotenciaInstaladaKW", DESCENDING)
+        ], "idx_filtros_completo")
+
+        safe_create([("SigAgente", ASCENDING), ("MdaPotenciaInstaladaKW", ASCENDING)], "idx_group_agente")
+        safe_create([("SigUF", ASCENDING), ("MdaPotenciaInstaladaKW", ASCENDING)], "idx_group_estado")
+
+
+
     except pymongo.errors.ConfigurationError:
         app.logger.error("Erro na URI do MongoDB.")
         raise
