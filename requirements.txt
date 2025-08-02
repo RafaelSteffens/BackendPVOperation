@@ -1,2 +1,5 @@
-Flask
-CORS
+Flask==3.1.1
+flask-cors==6.0.1
+pymongo==4.13.2
+pandas==2.3.1
+pydantic==2.11.6
