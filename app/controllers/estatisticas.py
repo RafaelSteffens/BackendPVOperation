@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify
 from app.extensions import db
 
 bp = Blueprint("estatisticas", __name__)
-ANEEL_EMPREEDIMENTOS_COLLECTION = db["empreendimentoGD"]
+ANEEL_EMPREEDIMENTOS_COLLECTION = db["empreendimentosGD"]
 
 @bp.route("/api/estatisticas", methods=["GET"])
 def estatisticas():
