@@ -55,8 +55,8 @@ def listar_filtros():
 
     if not filtros:
         cached = redis_client.get("filters")
-    if cached:
-        return jsonify(json.loads(cached))
+        if cached:
+            return jsonify(json.loads(cached))
 
     return jsonify({
         "SigUF": empreendimentosGD_collection.distinct("SigUF"),
@@ -77,8 +77,8 @@ def coord_usinas():
 
         if not filtros:
             cached = redis_client.get("coordenadas")
-        if cached:
-            return jsonify(json.loads(cached))
+            if cached:
+                return jsonify(json.loads(cached))
 
         pipeline = [
             {"$match": filtros},
