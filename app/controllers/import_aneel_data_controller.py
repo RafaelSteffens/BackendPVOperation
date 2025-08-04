@@ -1,16 +1,20 @@
-from flask import Blueprint, jsonify, current_app
+from flask import Blueprint, jsonify
 
-from app.services.saveEmpreendimentosInBD import importar_csv
+from ..services.import_save_empreendimentosaneel_bd import import_csv_data
 from app.extensions import db
-import pandas as pd
+
 from ..services.cache_services import cache_services
 
 bp = Blueprint('main', __name__)
 
 
-@bp.route('/api/searchAneelBD')
-def add_cliente():
-    importar_csv()
+@bp.route('/api/aneel/import')
+def import_aneel_data():
+    result = import_csv_data()
+    
+    if result.get("status") == "error":
+        return jsonify({"error": result["message"]}), 500
+    
     return jsonify({"mensagem": "Dados inseridos com sucesso no MongoDB!"}), 200
 
 
