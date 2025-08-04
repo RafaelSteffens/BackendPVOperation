@@ -117,6 +117,7 @@ class RegistroAneel(BaseModel):
         data["DatGeracaoConjuntoDados"] = to_date(data.get("DatGeracaoConjuntoDados"))
         data["SigAgente"] = to_none(data.get("SigAgente"))
         data["NomAgente"] = to_none(data.get("NomAgente"))
+        data["CodCEP"] = to_none(data.get("CodCEP"))
 
 
         return data
