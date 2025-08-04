@@ -10,15 +10,13 @@ def create_app():
     init_mongo(app)
     init_redis(app)
 
-    from .controllers.atualizaBD import bp as main_bp
-    from .controllers.usinas import bp as usinas
-    from .controllers.estatisticas import bp as estatisticas
+    from .controllers.import_aneel_data_controller import bp as main_bp
+    from .controllers.usinas_controller import bp as usinas
+    from .controllers.statistics_controller import bp as estatisticas
     app.register_blueprint(main_bp)
     app.register_blueprint(usinas)
     app.register_blueprint(estatisticas)
 
     CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})
-
-
 
     return app

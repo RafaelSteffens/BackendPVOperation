@@ -36,8 +36,6 @@ def init_mongo(app):
         safe_create([("SigAgente", ASCENDING), ("MdaPotenciaInstaladaKW", ASCENDING)], "idx_group_agente")
         safe_create([("SigUF", ASCENDING), ("MdaPotenciaInstaladaKW", ASCENDING)], "idx_group_estado")
 
-
-
     except pymongo.errors.ConfigurationError:
         app.logger.error("Erro na URI do MongoDB.")
         raise
