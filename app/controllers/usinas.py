@@ -1,9 +1,7 @@
 from flask import Blueprint, Response, request, jsonify, stream_with_context
-from bson.json_util import dumps
-from datetime import datetime
 import orjson
-
-import pandas as pd
+from ..extensions import redis_client
+import json
 
 from app.extensions import db
 
@@ -24,6 +22,11 @@ def listar_usinas():
         valor = request.args.get(campo)
         if valor:
             filtros[campo] = {"$regex": valor, "$options": "i"}
+
+    if not filtros and page == 1:
+        cached_data = redis_client.get("plants_page_1")
+        if cached_data:
+            return jsonify(json.loads(cached_data))  
 
     cursor = empreendimentosGD_collection.find(filtros, {"_id": 0}).skip(skip).limit(per_page)
     total = empreendimentosGD_collection.count_documents(filtros)
@@ -50,6 +53,11 @@ def listar_filtros():
     if municipio:
         filtros["NomMunicipio"] = municipio
 
+    if not filtros:
+        cached = redis_client.get("filters")
+    if cached:
+        return jsonify(json.loads(cached))
+
     return jsonify({
         "SigUF": empreendimentosGD_collection.distinct("SigUF"),
         "NomMunicipio": empreendimentosGD_collection.distinct("NomMunicipio", {"SigUF": uf}) if uf else [],
@@ -66,6 +74,11 @@ def coord_usinas():
             valor = request.args.get(campo)
             if valor:
                 filtros[campo] = {"$regex": f"^{valor}", "$options": "i"}
+
+        if not filtros:
+            cached = redis_client.get("coordenadas")
+        if cached:
+            return jsonify(json.loads(cached))
 
         pipeline = [
             {"$match": filtros},
