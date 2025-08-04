@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, current_app
 from app.services.saveEmpreendimentosInBD import importar_csv
 from app.extensions import db
 import pandas as pd
+from ..services.cache_services import cache_services
 
 bp = Blueprint('main', __name__)
 
@@ -17,6 +18,7 @@ def add_cliente():
 @bp.route('/ping-db')
 def ping_db():
     try:
+        cache_services()
         empreendimentoGD_collections = db['empreendimentosGD'].count_documents({})
         return jsonify({
             "status": "success",

@@ -1,9 +1,10 @@
 import pymongo
-from pymongo import ASCENDING, DESCENDING, TEXT, GEOSPHERE
+from pymongo import ASCENDING, DESCENDING
+from flask_redis import FlaskRedis
 
 client = None
 db = None
-
+redis_client = None
 empreendimentosGD_collection = None
 
 
@@ -40,3 +41,13 @@ def init_mongo(app):
     except pymongo.errors.ConfigurationError:
         app.logger.error("Erro na URI do MongoDB.")
         raise
+
+
+def init_redis(app):
+    global redis_client
+    try:
+        redis_client = FlaskRedis(app)
+        redis_client.ping()
+    except Exception as err:
+        print(f"[EXCEPTION REDIS] : {err}")
+        redis_client = None

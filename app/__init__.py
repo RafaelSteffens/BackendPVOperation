@@ -1,6 +1,6 @@
 from flask import Flask
 from .config import Config
-from .extensions import init_mongo
+from .extensions import init_mongo, init_redis
 from flask_cors import CORS
 
 def create_app():
@@ -8,6 +8,7 @@ def create_app():
     app.config.from_object(Config)
 
     init_mongo(app)
+    init_redis(app)
 
     from .controllers.atualizaBD import bp as main_bp
     from .controllers.usinas import bp as usinas
