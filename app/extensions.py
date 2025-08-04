@@ -13,7 +13,7 @@ def init_mongo(app):
     global empreendimentosGD_collection
 
     try:
-        client = pymongo.MongoClient(app.config['MONGO_URI'])
+        client = pymongo.MongoClient(app.config['MONGO_URI'], maxPoolSize=200, minPoolSize=10)
         db = client.bdaneel
 
         empreendimentosGD_collection = db["empreendimentosGD_collection"]
