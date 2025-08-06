@@ -1,0 +1,17 @@
+services:
+  redis-local:
+    image: redis:latest
+    container_name: redis-local
+    ports:
+      - "6380:6379"   # expõe a porta 6379 do container na 6380 do host
+    volumes:
+      - redis-local-volume:/data
+    command: ["redis-server", "--appendonly", "yes"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  redis-local-volume:

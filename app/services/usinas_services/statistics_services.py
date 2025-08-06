@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import  jsonify
 from app.extensions import db
 from ...extensions import redis_client
 import json
